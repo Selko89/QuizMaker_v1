@@ -28,5 +28,10 @@ namespace QuizMaker.Mappings
         {
             q.Text = dto.Text;
         }
+
+        public static List<QuestionDto> ToDtoList(IEnumerable<Question> questions)
+        {
+            return questions.Select(ToDto).ToList();
+        }
     }
 }

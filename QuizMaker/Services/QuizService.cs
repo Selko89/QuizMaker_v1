@@ -28,9 +28,35 @@ namespace QuizMaker.Services
             return QuizMapper.ToDto(quiz);
         }
 
-        public async Task<List<QuizDto>> GetAllQuizzesAsync()
+        public async Task<List<SimpleQuizDto>> GetAllQuizzesAsync(bool skipDeleted)
         {
-            var quizzes = await _db.Quizzes.Include(q => q.Questions).ThenInclude(q => q.Answers).ToListAsync();
+            var query = _db.Quizzes.AsQueryable();
+
+            if (skipDeleted)
+            {
+                query = query.Where(q => q.DeletedOn == null);     
+            }
+
+            var quizzes = await query.ToListAsync();
+            return quizzes.Select(QuizMapper.ToDtoSimple).ToList();
+        }
+
+        public async Task<List<QuizDto>> GetAllQuizzesFullDetailsAsync(bool skipDeleted)
+        {
+            var query = _db.Quizzes.Include(q => q.Questions).ThenInclude(q => q.Answers).AsQueryable();
+
+            if (skipDeleted)
+            {
+                query = query.Where(q => q.DeletedOn == null);
+            }
+
+            var quizzes = await query.ToListAsync();
+            return quizzes.Select(QuizMapper.ToDto).ToList();
+        }
+
+        public async Task<List<QuizDto>> GetDeletedQuizzesFullDetailsAsync()
+        {
+            var quizzes = await _db.Quizzes.Where(q => q.DeletedOn != null).ToListAsync();
 
             return quizzes.Select(QuizMapper.ToDto).ToList();
         }

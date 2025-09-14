@@ -25,11 +25,26 @@ namespace QuizMaker.Controllers
             return Ok(quiz);
         }
 
+
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> GetAllQuizzes()
+        public async Task<IActionResult> GetAllQuizzes([FromQuery] bool skipDeleted = false)
         {
-            return Ok(await _quizService.GetAllQuizzesAsync());
+            return Ok(await _quizService.GetAllQuizzesAsync(skipDeleted));
+        }
+
+        [AllowAnonymous]
+        [HttpGet("fullDetails")]
+        public async Task<IActionResult> GetAllQuizzesFullDetails([FromQuery] bool skipDeleted = false)
+        {
+            return Ok(await _quizService.GetAllQuizzesFullDetailsAsync(skipDeleted));
+        }
+
+        [AllowAnonymous]
+        [HttpGet("deleted")]
+        public async Task<IActionResult> GetDeletedQuizzes()
+        {
+            return Ok(await _quizService.GetDeletedQuizzesFullDetailsAsync());
         }
 
         [Authorize]
@@ -68,8 +83,8 @@ namespace QuizMaker.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
-        [Route("DeleteQuizForever")]
+        [Authorize]
+        [HttpDelete("{id}/forever")]
         public async Task<IActionResult> DeleteQuizForever(int id)
         {
             var userId = GetUserId();

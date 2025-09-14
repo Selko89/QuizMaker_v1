@@ -76,5 +76,24 @@ namespace QuizMaker.Services
             return true;
         }
 
+        public async Task<List<QuestionDto>> SearchQuestionsAsync(string? search, int page = 1, int pageSize = 20)
+        {
+            var query = _db.Questions
+                .Include(q => q.Answers)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                query = query.Where(q => q.Text.Contains(search));
+            }
+
+            var questions = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return QuestionMapper.ToDtoList(questions);
+        }
+
     }
 }

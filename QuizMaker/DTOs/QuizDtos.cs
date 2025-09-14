@@ -2,6 +2,12 @@
 
 namespace QuizMaker.DTOs
 {
+
+    public class SimpleQuizDto
+    {
+        public int Id { get; set; }
+        public string Title { get; set; } = string.Empty;
+    }
     public class QuizDto
     {
         public int Id { get; set; }

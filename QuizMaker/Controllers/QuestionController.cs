@@ -58,5 +58,13 @@ namespace QuizMaker.Controllers
             return NoContent();
         }
 
+        [AllowAnonymous]
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchQuestions([FromQuery] string? search, int page = 1, int pageSize = 20)
+        {
+            var questions = await _questionService.SearchQuestionsAsync(search, page, pageSize);
+            return Ok(questions);
+        }
+
     }
 }

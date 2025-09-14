@@ -5,6 +5,14 @@ namespace QuizMaker.Mappings
 {
     public static class QuizMapper
     {
+        public static SimpleQuizDto ToDtoSimple(Quiz q)
+        {
+            return new SimpleQuizDto
+            {
+                Id = q.Id,
+                Title = q.Title,
+            };
+        }
         public static QuizDto ToDto(Quiz q)
         {
             return new QuizDto
