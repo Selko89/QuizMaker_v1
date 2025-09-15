@@ -11,6 +11,7 @@ namespace QuizMaker.Mappings
             {
                 Id = q.Id,
                 Title = q.Title,
+                Description = q.Description,
             };
         }
         public static QuizDto ToDto(Quiz q)
@@ -19,6 +20,7 @@ namespace QuizMaker.Mappings
             {
                 Id = q.Id,
                 Title = q.Title,
+                Description = q.Description,
                 CreatedById = q.CreatedById,
                 Questions = q.Questions.Select(QuestionMapper.ToDto).ToList()
             };

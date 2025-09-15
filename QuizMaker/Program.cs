@@ -58,6 +58,7 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<QuizService>();
 builder.Services.AddScoped<QuestionService>();
 builder.Services.AddScoped<AnswerService>();
+builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<QuizExportService>();
 
 //Set QuestPDF license

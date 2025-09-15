@@ -7,6 +7,7 @@ namespace QuizMaker.DTOs
     {
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
     }
     public class QuizDto
     {
@@ -21,6 +22,7 @@ namespace QuizMaker.DTOs
     {
         [Required, MinLength(1)]
         public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
         public List<int> QuestionIds { get; set; } = new();
     }
 
@@ -28,6 +30,7 @@ namespace QuizMaker.DTOs
     {
         [Required, MinLength(1)]
         public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
         public List<int> QuestionIds { get; set; } = new();
     }
 }

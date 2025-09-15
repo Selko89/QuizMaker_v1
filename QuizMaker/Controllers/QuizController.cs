@@ -101,18 +101,5 @@ namespace QuizMaker.Controllers
             await _quizService.DeleteQuizForeverAsync(id, userId.Value, currentUserRole == UserRole.Administrator);
             return NoContent();
         }
-
-        //private int? GetUserId()
-        //{
-        //    var sub = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue("sub");
-        //    if (int.TryParse(sub, out var id)) return id;
-        //    return null;
-        //}
-        //private UserRole? GetUserRole()
-        //{
-        //    if (User.Identity?.IsAuthenticated != true) return null;
-        //    var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
-        //    return roleClaim != null ? Enum.Parse<UserRole>(roleClaim.Value) : null;
-        //}
     }
 }

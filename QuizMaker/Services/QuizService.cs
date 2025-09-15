@@ -70,7 +70,7 @@ namespace QuizMaker.Services
                 throw new Exception("Quiz must contain minimum one question");
             }
 
-            var quiz = new Quiz { Title = dto.Title, Questions = questions, CreatedById = userId };
+            var quiz = new Quiz { Title = dto.Title, Description = dto.Description, Questions = questions, CreatedById = userId };
 
             _db.Quizzes.Add(quiz);
             await _db.SaveChangesAsync();
@@ -90,6 +90,7 @@ namespace QuizMaker.Services
             if (quiz.CreatedById != userId && !canUpdate) throw new UnauthorizedAccessException();
 
             quiz.Title = dto.Title;
+            quiz.Description = dto.Description;
 
             if (dto.QuestionIds != null && dto.QuestionIds.Any())
             {
