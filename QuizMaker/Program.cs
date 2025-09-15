@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using QuestPDF.Infrastructure;
 using QuizMaker.Data;
 using QuizMaker.Services;
 using System.Text;
@@ -57,6 +58,10 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<QuizService>();
 builder.Services.AddScoped<QuestionService>();
 builder.Services.AddScoped<AnswerService>();
+builder.Services.AddScoped<QuizExportService>();
+
+//Set QuestPDF license
+QuestPDF.Settings.License = LicenseType.Community;
 
 //JWT Auth
 var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new Exception("Jwt:Key missing");

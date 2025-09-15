@@ -12,6 +12,7 @@ namespace QuizMaker.DTOs
     {
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
         public List<QuestionDto> Questions { get; set; } = new();
         public int? CreatedById { get; set; }
     }
