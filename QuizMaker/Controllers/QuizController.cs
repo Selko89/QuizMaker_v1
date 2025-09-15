@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QuizMaker.DTOs;
+using QuizMaker.Helpers;
+using QuizMaker.Models;
 using QuizMaker.Services;
 using System.Security.Claims;
 
@@ -52,7 +54,7 @@ namespace QuizMaker.Controllers
         public async Task<IActionResult> CreateQuiz([FromBody] CreateQuizDto dto)
         {
             if(!ModelState.IsValid) return BadRequest(ModelState);
-            var userId = GetUserId();
+            var userId = User.GetUserId();
             if (userId == null) return Unauthorized();
 
             var quiz = await _quizService.CreateQuizAsync(dto, userId.Value);
@@ -65,10 +67,12 @@ namespace QuizMaker.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var userId = GetUserId();
+            var userId = User.GetUserId();
             if (userId == null) return Unauthorized();
 
-            var quiz = await _quizService.UpdateQuizAsync(id, dto, userId.Value);
+            var currentUserRole = User.GetUserRole();
+
+            var quiz = await _quizService.UpdateQuizAsync(id, dto, userId.Value, (currentUserRole == UserRole.Administrator || currentUserRole == UserRole.SuperUser));
             return Ok(quiz);
         }
 
@@ -76,10 +80,12 @@ namespace QuizMaker.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteQuiz(int id)
         {
-            var userId = GetUserId();
+            var userId = User.GetUserId();
             if (userId == null) return Unauthorized();
 
-            await _quizService.DeleteQuizAsync(id, userId.Value);
+            var currentUserRole = User.GetUserRole();
+
+            await _quizService.DeleteQuizAsync(id, userId.Value, currentUserRole == UserRole.Administrator);
             return NoContent();
         }
 
@@ -87,18 +93,26 @@ namespace QuizMaker.Controllers
         [HttpDelete("{id}/forever")]
         public async Task<IActionResult> DeleteQuizForever(int id)
         {
-            var userId = GetUserId();
+            var userId = User.GetUserId();
             if (userId == null) return Unauthorized();
 
-            await _quizService.DeleteQuizForeverAsync(id, userId.Value);
+            var currentUserRole = User.GetUserRole();
+
+            await _quizService.DeleteQuizForeverAsync(id, userId.Value, currentUserRole == UserRole.Administrator);
             return NoContent();
         }
 
-        private int? GetUserId()
-        {
-            var sub = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue("sub");
-            if (int.TryParse(sub, out var id)) return id;
-            return null;
-        }
+        //private int? GetUserId()
+        //{
+        //    var sub = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue("sub");
+        //    if (int.TryParse(sub, out var id)) return id;
+        //    return null;
+        //}
+        //private UserRole? GetUserRole()
+        //{
+        //    if (User.Identity?.IsAuthenticated != true) return null;
+        //    var roleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
+        //    return roleClaim != null ? Enum.Parse<UserRole>(roleClaim.Value) : null;
+        //}
     }
 }

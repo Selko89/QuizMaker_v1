@@ -16,7 +16,6 @@
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //Quiz <-> Question many-to-many
             modelBuilder.Entity<Quiz>()
                 .HasMany(q => q.Questions)
                 .WithMany(q => q.Quizzes)
@@ -34,7 +33,6 @@
                 .Property(q => q.Text)
                 .IsRequired();
 
-            //Question -> Answers one-to-many with when delete Question delete of Answers too.
             modelBuilder.Entity<Question>()
                 .HasMany(q => q.Answers)
                 .WithOne(a => a.Question)
@@ -47,7 +45,11 @@
             .HasForeignKey(q => q.CreatedById)
             .OnDelete(DeleteBehavior.SetNull); //if the User is deleted, the CreatedById column in Quiz is set to NULL
 
-
+            modelBuilder.Entity<User>()
+            .Property(u => u.Role)
+            .HasConversion<string>()
+            .HasMaxLength(20)
+            .IsRequired(false);
 
         }
     }

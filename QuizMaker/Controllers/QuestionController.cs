@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QuizMaker.DTOs;
+using QuizMaker.Helpers;
 using QuizMaker.Models;
 using QuizMaker.Services;
 
@@ -37,6 +38,10 @@ namespace QuizMaker.Controllers
         public async Task<IActionResult> CreateQuestion([FromBody] CreateQuestionDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var userId = User.GetUserId();
+            if (userId == null) return Unauthorized();
+
             var created = await _questionService.CreateQuestionAsync(dto);
             return Ok(created);
         }
@@ -46,11 +51,15 @@ namespace QuizMaker.Controllers
         public async Task<IActionResult> UpdateQuestion(int id, [FromBody] UpdateQuestionDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var userId = User.GetUserId();
+            if (userId == null) return Unauthorized();
+
             var updated = await _questionService.UpdateQuestionAsync(id, dto);
             return Ok(updated);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator,SuperUser")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteQuestion(int id)
         {

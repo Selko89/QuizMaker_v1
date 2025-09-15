@@ -41,5 +41,6 @@ namespace QuizMaker.Controllers
             var user = await _auth.GetUserInfoAsync(dto.Email);
             return Ok(new AuthResponseDto { Token = token, UserId = user.Id, NickName = user.NickName });
         }
+
     }
 }

@@ -31,7 +31,8 @@ namespace QuizMaker.Services
             {
                 Email = dto.Email,
                 NickName = dto.NickName,
-                PasswordHash = PasswordHasher.GetHash(dto.Password)
+                PasswordHash = PasswordHasher.GetHash(dto.Password),
+                Role = null
             };
 
             _db.Users.Add(user);
@@ -66,12 +67,16 @@ namespace QuizMaker.Services
 
             var expiresHours = int.TryParse(_config["Jwt:ExpiresHours"], out var h) ? h : 4;
 
-            var claims = new[]
+            var claims = new List<Claim>
             {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email),
             new Claim("nickName", user.NickName)
         };
+            if (user.Role.HasValue)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, user.Role.Value.ToString()));
+            }
 
             var token = new JwtSecurityToken(
                 issuer: _config["Jwt:Issuer"],

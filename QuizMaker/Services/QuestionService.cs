@@ -71,6 +71,7 @@ namespace QuizMaker.Services
             {
                 throw new Exception("Question not found");
             }
+
             _db.Questions.Remove(question);
             await _db.SaveChangesAsync();
             return true;

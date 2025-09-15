@@ -78,7 +78,7 @@ namespace QuizMaker.Services
             return await GetQuizAsync(quiz.Id);
         }
 
-        public async Task<QuizDto> UpdateQuizAsync(int id, UpdateQuizDto dto, int userId)
+        public async Task<QuizDto> UpdateQuizAsync(int id, UpdateQuizDto dto, int userId, bool canUpdate)
         {
             var quiz = await _db.Quizzes.Include(q => q.Questions).FirstOrDefaultAsync(q => q.Id == id);
 
@@ -86,6 +86,8 @@ namespace QuizMaker.Services
             {
                 throw new Exception("Quiz not found");
             }
+
+            if (quiz.CreatedById != userId && !canUpdate) throw new UnauthorizedAccessException();
 
             quiz.Title = dto.Title;
 
@@ -110,14 +112,14 @@ namespace QuizMaker.Services
             return await GetQuizAsync(id);
         }
 
-        public async Task<bool> DeleteQuizAsync(int id, int userId)
+        public async Task<bool> DeleteQuizAsync(int id, int userId, bool canDelete)
         {
             var quiz = await _db.Quizzes.FindAsync(id);
             if (quiz == null)
             {
                 throw new Exception("Quiz not found");
             }
-            if (quiz.CreatedById != userId) throw new UnauthorizedAccessException();
+            if (quiz.CreatedById != userId && !canDelete) throw new UnauthorizedAccessException();
 
             quiz.DeletedOn = DateTime.Now;
 
@@ -126,7 +128,7 @@ namespace QuizMaker.Services
             return true;
         }
 
-        public async Task<bool> DeleteQuizForeverAsync(int id, int userId)
+        public async Task<bool> DeleteQuizForeverAsync(int id, int userId, bool canDelete)
         {
             var quiz = await _db.Quizzes.FindAsync(id);
             if (quiz == null)
@@ -134,7 +136,7 @@ namespace QuizMaker.Services
                 throw new Exception("Quiz not found");
             }
 
-            if (quiz.CreatedById != userId) throw new UnauthorizedAccessException();
+            if (quiz.CreatedById != userId && !canDelete) throw new UnauthorizedAccessException();
 
             _db.Quizzes.Remove(quiz);
             await _db.SaveChangesAsync();
