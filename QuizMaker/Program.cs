@@ -109,4 +109,13 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+//Add dummydata to db if db doesnt exist.
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate(); // apply migrations
+    await DummyDataSeeder.SeedAsync(db);
+}
+//
+
 app.Run();
