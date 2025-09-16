@@ -60,6 +60,7 @@ builder.Services.AddScoped<QuestionService>();
 builder.Services.AddScoped<AnswerService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<QuizExportService>();
+builder.Services.AddScoped<QuizResultService>();
 
 //Set QuestPDF license
 QuestPDF.Settings.License = LicenseType.Community;

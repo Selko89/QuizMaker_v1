@@ -21,7 +21,7 @@ namespace QuizMaker.Exporters
         public byte[] Export(QuizDto quiz)
         {
             var sb = new StringBuilder();
-            sb.AppendLine("Question"); // header row
+            sb.AppendLine(quiz.Title); // header row
 
             foreach (var q in quiz.Questions)
             {

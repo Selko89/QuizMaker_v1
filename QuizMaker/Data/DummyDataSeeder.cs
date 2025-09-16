@@ -1,5 +1,6 @@
 ﻿using QuizMaker.Models;
 using Microsoft.EntityFrameworkCore;
+using QuizMaker.Authentication;
 
 namespace QuizMaker.Data
 {
@@ -10,9 +11,9 @@ namespace QuizMaker.Data
             if (await db.Users.AnyAsync()) return; // Prevent double seeding
 
             // --- Users ---
-            var admin = new User { Email = "admin@example.com", NickName = "AdminUser", Role = UserRole.Administrator };
-            var superUser = new User { Email = "superuser@example.com", NickName = "SuperUser", Role = UserRole.SuperUser};
-            var normalUser = new User { Email = "user@example.com", NickName = "NormalUser" };
+            var admin = new User { Email = "admin@example.com", NickName = "AdminUser", Role = UserRole.Administrator, PasswordHash = PasswordHasher.GetHash("123456") };
+            var superUser = new User { Email = "superuser@example.com", NickName = "SuperUser", Role = UserRole.SuperUser, PasswordHash = PasswordHasher.GetHash("123456") };
+            var normalUser = new User { Email = "user@example.com", NickName = "NormalUser", PasswordHash = PasswordHasher.GetHash("123456") };
 
             db.Users.AddRange(admin, superUser, normalUser);
             await db.SaveChangesAsync();
