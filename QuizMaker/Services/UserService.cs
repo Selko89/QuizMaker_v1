@@ -32,7 +32,7 @@ namespace QuizMaker.Services
             return UserMapper.ToDto(user);
         }
 
-        public async Task<UserDto?> UpdateUserAsync(int userId, UpdateUserDto dto, bool isAdmin)
+        public async Task<UserDto?> UpdateUserAsync(int currentUserId, int userId, UpdateUserDto dto, bool isAdmin)
         {
             var user = await _db.Users.FindAsync(userId);
 
@@ -41,13 +41,17 @@ namespace QuizMaker.Services
                 throw new Exception("User not found");
             }
 
-            if (isAdmin || (userId == user.Id))
+            if (isAdmin || (currentUserId == user.Id))
             {
                 if (!string.IsNullOrEmpty(dto.Email))
                     user.Email = dto.Email;
 
                 if (!string.IsNullOrEmpty(dto.NickName))
                     user.NickName = dto.NickName;
+            }
+            else
+            {
+                throw new Exception("You are not autorized to change this user");
             }
 
             // Update user (admin only)

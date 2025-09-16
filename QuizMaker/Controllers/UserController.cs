@@ -45,7 +45,7 @@ namespace QuizMaker.Controllers
 
             var currentUserRole = User.GetUserRole();
 
-            var updatedUser = await _userService.UpdateUserAsync(id, dto, (currentUserRole == UserRole.Administrator || currentUserRole == UserRole.SuperUser));
+            var updatedUser = await _userService.UpdateUserAsync(userId.Value, id, dto, (currentUserRole == UserRole.Administrator || currentUserRole == UserRole.SuperUser));
             if (updatedUser == null) return NotFound();
             return Ok(updatedUser);
         }

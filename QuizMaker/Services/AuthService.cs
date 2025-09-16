@@ -69,6 +69,7 @@ namespace QuizMaker.Services
 
             var claims = new List<Claim>
             {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email),
             new Claim("nickName", user.NickName)
